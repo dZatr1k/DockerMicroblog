@@ -10,11 +10,20 @@ services:
     environment:
       FLASK_APP: microblog.py
       FLASK_ENV: development
-      DATABASE_URL: "postgresql://microblog:password@db/microblog"
+      SECRET_KEY: ${SECRET_KEY}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      ELASTICSEARCH_URL: ${ELASTICSEARCH_URL}
+      MAIL_SERVER: ${MAIL_SERVER}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USE_TLS: ${MAIL_USE_TLS}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     volumes:
       - app_dependencies:/app
     depends_on:
       - db
+      - redis
     command: sh -c "flask db upgrade && flask run --host=0.0.0.0"
 
 
@@ -27,6 +36,12 @@ services:
       POSTGRES_DB: microblog
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:alpine
+    restart: always
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    ports:
+      - "6379:6379"
 
 volumes:
     postgres_data:
