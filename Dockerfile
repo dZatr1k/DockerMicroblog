@@ -1,13 +1,18 @@
 FROM python:3.11-alpine
 
+RUN apk add --no-cache --virtual .build-deps \
+    gcc musl-dev libffi-dev postgresql-dev \
+    && apk add --no-cache libpq
+
 WORKDIR /app
+COPY . /app
 
-RUN apk add --no-cache gcc musl-dev libffi-dev postgresql-dev
-
-COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN apk del .build-deps
+
+ENV FLASK_APP=microblog.py
+ENV FLASK_ENV=production
 
 EXPOSE 5000
 
