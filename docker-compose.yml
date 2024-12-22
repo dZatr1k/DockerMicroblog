@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: microblog_app
+    ports:
+      - "5001:5000"
+    environment:
+      FLASK_APP: microblog.py
+      FLASK_ENV: development
+      DATABASE_URL: "postgresql://microblog:password@db/microblog"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: microblog_db
+    environment:
+      POSTGRES_USER: microblog
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: microblog
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
