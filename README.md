@@ -38,4 +38,8 @@ Cтуденты ЛЭТИ гр. 2304
    git clone https://github.com/yourusername/microblog-docker.git
    cd microblog-docker
    ```
-todo
+
+2. В папке с репозиторией выполните:
+   ```bash
+   docker-compose up --build
+   ```
